@@ -37,24 +37,24 @@ public class TrocoGuloso {
     }
 
     public static void main(String[] args) {
-        Integer[] moedas = {100, 25, 10, 5, 1};
+        int[] valoresTeste = {289, 550, 43};
         
-        int valor1 = 289;
-        System.out.println("--- Caso de Teste 1 ---");
-        List<Integer> resultado1 = calcularTroco(moedas, valor1);
-        System.out.println("Moedas escolhidas [" + valor1 + "]: " + resultado1);
-        System.out.println("Quantidade total de moedas: " + resultado1.size() + "\n");
+        Integer[] moedasConjunto1 = {100, 20, 10, 5, 1};
+        System.out.println("TESTE COM CONJUNTO DE MOEDAS: [100, 20, 10, 5, 1]");
+        for (int valor : valoresTeste) {
+            System.out.println("--- Valor: " + valor + " ---");
+            List<Integer> resultado = calcularTroco(moedasConjunto1, valor);
+            System.out.println("Moedas escolhidas: " + resultado);
+            System.out.println("Quantidade total de moedas: " + resultado.size() + "\n");
+        }
 
-        int valor2 = 550;
-        System.out.println("--- Caso de Teste 2 ---");
-        List<Integer> resultado2 = calcularTroco(moedas, valor2);
-        System.out.println("Moedas escolhidas [" + valor2 + "]: " + resultado2);
-        System.out.println("Quantidade total de moedas: " + resultado2.size() + "\n");
-
-        int valor3 = 43;
-        System.out.println("--- Caso de Teste 3 ---");
-        List<Integer> resultado3 = calcularTroco(moedas, valor3);
-        System.out.println("Moedas escolhidas [" + valor3 + "]: " + resultado3);
-        System.out.println("Quantidade total de moedas: " + resultado3.size() + "\n");
+        Integer[] moedasConjunto2 = {100, 30, 25, 10, 5, 1};
+        System.out.println("TESTE COM CONJUNTO DE MOEDAS: [100, 30, 25, 10, 5, 1]");
+        for (int valor : valoresTeste) {
+            System.out.println("--- Valor: " + valor + " ---");
+            List<Integer> resultado = calcularTroco(moedasConjunto2, valor);
+            System.out.println("Moedas escolhidas: " + resultado);
+            System.out.println("Quantidade total de moedas: " + resultado.size() + "\n");
+        }
     }
 }
