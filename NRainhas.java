@@ -27,6 +27,7 @@ public class NRainhas {
             }
         }
         
+        System.out.println("\nComplexidade: O(N! * N)");
         scanner.close();
     }
 
