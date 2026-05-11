@@ -4,98 +4,109 @@ import java.util.Scanner;
 
 public class NRainhas {
 
+    static int iteracoes = 0;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Digite o tamanho do tabuleiro (N >= 2): ");
+        System.out.print("Digite o valor de N (>= 2): ");
         int n = scanner.nextInt();
-        
+
         if (n < 2) {
-            System.out.println("N deve ser maior ou igual a 2.");
+            System.out.println("N deve ser >= 2");
             scanner.close();
             return;
         }
-        
-        List<List<String>> solucoes = resolverNQueens(n);
-        
-        if (solucoes.isEmpty()) {
-            System.out.println("Não há soluções possíveis para N = " + n);
+
+        // achar uma solucao
+        System.out.println("\n--- Primeira solucao ---\n");
+        int[] tab = new int[n];
+        iteracoes = 0;
+        boolean achou = resolver(tab, 0, n);
+
+        if (achou) {
+            mostrar(tab, n);
+            System.out.println("Iteracoes: " + iteracoes);
         } else {
-            System.out.println("\nForam encontradas " + solucoes.size() + " soluções possíveis:");
-            for (int i = 0; i < solucoes.size(); i++) {
-                System.out.println("\nSolução " + (i + 1) + ":");
-                imprimirTabuleiro(solucoes.get(i));
+            System.out.println("Sem solucao para N = " + n);
+        }
+
+        // complexidade
+        System.out.println("\nComplexidade: O(N!)");
+        System.out.println("Cada linha tenta N colunas, mas a poda reduz pra ~N! no total\n");
+
+        // achar todas
+        System.out.println("--- Todas as solucoes ---\n");
+        List<int[]> todas = new ArrayList<>();
+        int[] tab2 = new int[n];
+        iteracoes = 0;
+        resolverTodas(todas, tab2, 0, n);
+
+        if (todas.isEmpty()) {
+            System.out.println("Sem solucao para N = " + n);
+        } else {
+            System.out.println("Total: " + todas.size() + " solucoes");
+            System.out.println("Iteracoes: " + iteracoes + "\n");
+            for (int i = 0; i < todas.size(); i++) {
+                System.out.println("Solucao " + (i + 1) + ":");
+                mostrar(todas.get(i), n);
             }
         }
-        
-        System.out.println("\nComplexidade: O(N! * N)");
+
         scanner.close();
     }
 
-    public static List<List<String>> resolverNQueens(int n) {
-        List<List<String>> resultado = new ArrayList<>();
-        char[][] tabuleiro = new char[n][n];
-        
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                tabuleiro[i][j] = '.';
+    // backtracking que para na primeira
+    static boolean resolver(int[] rainhas, int linha, int n) {
+        if (linha == n)
+            return true;
+
+        for (int col = 0; col < n; col++) {
+            iteracoes++;
+            if (posicaoValida(rainhas, linha, col)) {
+                rainhas[linha] = col;
+                if (resolver(rainhas, linha + 1, n))
+                    return true;
             }
         }
-        
-        backtrack(resultado, tabuleiro, 0, n);
-        return resultado;
+        return false;
     }
 
-    private static void backtrack(List<List<String>> resultado, char[][] tabuleiro, int linha, int n) {
+    // backtracking que acha todas
+    static void resolverTodas(List<int[]> solucoes, int[] rainhas, int linha, int n) {
         if (linha == n) {
-            resultado.add(construirTabuleiro(tabuleiro));
+            solucoes.add(rainhas.clone());
             return;
         }
 
         for (int col = 0; col < n; col++) {
-            if (ehSeguro(tabuleiro, linha, col, n)) {
-                tabuleiro[linha][col] = 'Q';
-                backtrack(resultado, tabuleiro, linha + 1, n);
-                tabuleiro[linha][col] = '.';
+            iteracoes++;
+            if (posicaoValida(rainhas, linha, col)) {
+                rainhas[linha] = col;
+                resolverTodas(solucoes, rainhas, linha + 1, n);
             }
         }
     }
 
-    private static boolean ehSeguro(char[][] tabuleiro, int linha, int col, int n) {
+    static boolean posicaoValida(int[] rainhas, int linha, int col) {
         for (int i = 0; i < linha; i++) {
-            if (tabuleiro[i][col] == 'Q') {
+            if (rainhas[i] == col)
                 return false;
-            }
-        }
-
-        for (int i = linha - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
-            if (tabuleiro[i][j] == 'Q') {
+            if (Math.abs(rainhas[i] - col) == Math.abs(i - linha))
                 return false;
-            }
         }
-
-        for (int i = linha - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
-            if (tabuleiro[i][j] == 'Q') {
-                return false;
-            }
-        }
-
         return true;
     }
 
-    private static List<String> construirTabuleiro(char[][] tabuleiro) {
-        List<String> res = new ArrayList<>();
-        for (int i = 0; i < tabuleiro.length; i++) {
-            res.add(new String(tabuleiro[i]));
-        }
-        return res;
-    }
-
-    private static void imprimirTabuleiro(List<String> tabuleiro) {
-        for (String linha : tabuleiro) {
-            for (int i = 0; i < linha.length(); i++) {
-                System.out.print(linha.charAt(i) + " ");
+    static void mostrar(int[] rainhas, int n) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (rainhas[i] == j)
+                    System.out.print("Q ");
+                else
+                    System.out.print(". ");
             }
             System.out.println();
         }
+        System.out.println();
     }
 }
