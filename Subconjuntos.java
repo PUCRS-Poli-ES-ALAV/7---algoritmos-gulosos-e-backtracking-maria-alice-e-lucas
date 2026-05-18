@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class SomaSubconjuntos {
+public class Subconjuntos {
 
     static int iteracoes = 0;
 
